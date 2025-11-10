@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 
 export default function CreateAlbum() {
@@ -8,11 +9,28 @@ export default function CreateAlbum() {
   const [isCreating, setIsCreating] = useState(false);
   const router = useRouter();
   const [entered, setEntered] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isAuthed, setIsAuthed] = useState(false);
 
   // simple enter animation
   useEffect(() => {
     const t = requestAnimationFrame(() => setEntered(true));
     return () => cancelAnimationFrame(t);
+  }, []);
+
+  // Require auth to create albums
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setIsAuthed(!!user);
+      } catch (e) {
+        // console.warn('Auth check failed', e); // debug disabled for deployment
+      } finally {
+        setAuthChecked(true);
+      }
+    };
+    check();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,9 +39,14 @@ export default function CreateAlbum() {
 
     setIsCreating(true);
     try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
       const response = await fetch('/api/albums', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({ name: albumName }),
       });
 
@@ -34,7 +57,7 @@ export default function CreateAlbum() {
         alert('Failed to create album');
       }
     } catch (error) {
-      console.error('Error creating album:', error);
+      // console.error('Error creating album:', error); // debug disabled for deployment
       alert('Failed to create album');
     } finally {
       setIsCreating(false);
@@ -52,7 +75,21 @@ export default function CreateAlbum() {
             <span>←</span> Back to Home
           </button>
         </div>
-
+        {!authChecked ? (
+          <div className="glass-strong rounded-2xl shadow-2xl p-10 border border-subtle text-center">
+            <div className="animate-pulse text-muted">Checking authentication…</div>
+          </div>
+        ) : !isAuthed ? (
+          <div className="glass-strong rounded-2xl shadow-2xl p-10 border border-subtle text-center space-y-6">
+            <div className="text-5xl">🔒</div>
+            <h1 className="text-3xl font-extrabold">Sign in required</h1>
+            <p className="text-muted">You need an account to create a new album.</p>
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              <a href="/auth/login" className="accent px-6 py-3 rounded-xl font-semibold">Sign In</a>
+              <a href="/auth/register" className="glass px-6 py-3 rounded-xl font-semibold border border-subtle">Create Account</a>
+            </div>
+          </div>
+        ) : (
         <div className="glass-strong rounded-2xl shadow-2xl p-10 border border-subtle">
           <div className="text-center mb-8">
             <div className="inline-block mb-4">
@@ -103,6 +140,7 @@ export default function CreateAlbum() {
             </p>
           </div>
         </div>
+        )}
       </div>
     </div>
   );

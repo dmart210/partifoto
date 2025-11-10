@@ -11,12 +11,12 @@ try {
   
   if (!hasTitle) {
     db.exec('ALTER TABLE photos ADD COLUMN title TEXT');
-    console.log('✅ Migration complete: Added title column to photos table');
+  // console.log('✅ Migration complete: Added title column to photos table'); // debug disabled for deployment
   } else {
-    console.log('✅ Title column already exists');
+  // console.log('✅ Title column already exists'); // debug disabled for deployment
   }
 } catch (error) {
-  console.error('❌ Migration failed:', error);
+  // console.error('❌ Migration failed:', error); // debug disabled for deployment
 } finally {
   db.close();
 }

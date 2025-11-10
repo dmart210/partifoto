@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { nanoid } from 'nanoid';
 import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 import {
   enforceRateLimit,
   extractClientKey,
@@ -10,6 +11,19 @@ import {
 // Create a new album
 export async function POST(request: NextRequest) {
   try {
+    // Require authenticated user via Bearer token
+    const authz = request.headers.get('authorization') || request.headers.get('Authorization');
+    if (!authz || !authz.toLowerCase().startsWith('bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const token = authz.split(' ')[1];
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const authed = createClient(supabaseUrl, supabaseAnonKey, { global: { headers: { Authorization: `Bearer ${token}` } } });
+    const { data: { user }, error: userErr } = await authed.auth.getUser();
+    if (userErr || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     // Basic rate limit
     const clientKey = extractClientKey(request.headers);
     if (!enforceRateLimit(clientKey)) {
@@ -35,13 +49,13 @@ export async function POST(request: NextRequest) {
     const res = NextResponse.json(data);
     hardenHeaders(res.headers);
     if (error) {
-      console.error('Supabase insert error (album):', error);
+      // console.error('Supabase insert error (album):', error); // debug disabled for deployment
       return NextResponse.json({ error: 'Failed to create album' }, { status: 500 });
     }
 
     return res;
   } catch (error) {
-    console.error('Error creating album:', error);
+    // console.error('Error creating album:', error); // debug disabled for deployment
     return NextResponse.json({ error: 'Failed to create album' }, { status: 500 });
   }
 }
@@ -55,7 +69,7 @@ export async function GET() {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Supabase select error (albums list):', error);
+      // console.error('Supabase select error (albums list):', error); // debug disabled for deployment
       return NextResponse.json({ error: 'Failed to fetch albums' }, { status: 500 });
     }
 
@@ -63,7 +77,7 @@ export async function GET() {
     hardenHeaders(res.headers);
     return res;
   } catch (error) {
-    console.error('Error fetching albums:', error);
+    // console.error('Error fetching albums:', error); // debug disabled for deployment
     return NextResponse.json({ error: 'Failed to fetch albums' }, { status: 500 });
   }
 }

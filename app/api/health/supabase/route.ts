@@ -49,7 +49,7 @@ export async function GET(request: Request) {
       ...(sampleRows ? { samples: sampleRows } : {})
     });
   } catch (error) {
-    console.error('Health endpoint error:', error);
+    // console.error('Health endpoint error:', error); // debug disabled for deployment
     return NextResponse.json({ ok: false, error: 'Health check failed' }, { status: 500 });
   }
 }
@@ -57,7 +57,7 @@ export async function GET(request: Request) {
 async function countTable(table: string): Promise<number | null> {
   const { count, error } = await supabase.from(table).select('*', { count: 'exact', head: true });
   if (error) {
-    console.error(`Count error for ${table}:`, error.message);
+    // console.error(`Count error for ${table}:`, error.message); // debug disabled for deployment
     return null;
   }
   return count ?? 0;

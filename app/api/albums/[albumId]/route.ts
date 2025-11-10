@@ -29,7 +29,7 @@ export async function GET(
       if (albumError.code === 'PGRST116') { // not found
         return NextResponse.json({ error: 'Album not found' }, { status: 404 });
       }
-      console.error('Supabase album fetch error:', albumError);
+  // console.error('Supabase album fetch error:', albumError); // debug disabled for deployment
       return NextResponse.json({ error: 'Failed to fetch album' }, { status: 500 });
     }
 
@@ -41,7 +41,7 @@ export async function GET(
       .order('created_at', { ascending: false });
 
     if (photosError) {
-      console.error('Supabase photos fetch error:', photosError);
+  // console.error('Supabase photos fetch error:', photosError); // debug disabled for deployment
       return NextResponse.json({ error: 'Failed to fetch photos' }, { status: 500 });
     }
 
@@ -55,7 +55,7 @@ export async function GET(
     hardenHeaders(res.headers);
     return res;
   } catch (error) {
-    console.error('Error fetching album:', error);
+  // console.error('Error fetching album:', error); // debug disabled for deployment
     return NextResponse.json({ error: 'Failed to fetch album' }, { status: 500 });
   }
 }

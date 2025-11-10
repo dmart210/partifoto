@@ -5,10 +5,10 @@ A collaborative photo-sharing app where anyone with a link can upload photos, co
 ## Features
 
 ✅ **Create Albums** - Generate shareable albums with unique links
-✅ **Upload Photos** - Anyone with the link can upload photos to the album  
+✅ **Upload Photos** - Authenticated users can upload photos (flow: create account or login → upload)  
 ✅ **Comment System** - Leave comments on any photo in the album
 ✅ **Download Photos** - Download any photo from the album
-✅ **No Authentication** - Simple, friction-free sharing (authentication can be added later)
+✅ **Authentication Flow** - Users create an account or sign in before creating albums or uploading photos
 
 ## Getting Started
 
@@ -37,9 +37,9 @@ A collaborative photo-sharing app where anyone with a link can upload photos, co
 - Share it through Partiful invitations, text messages, or any messaging app
 - Anyone with the link can access the album
 
-### Uploading Photos
-1. Open the album link
-2. Optionally enter your name
+### Uploading Photos (Auth-Gated)
+1. Sign in or create an account
+2. Open or create an album
 3. Click "Choose Photo" to upload an image
 4. Photos appear in a grid layout
 
@@ -88,6 +88,61 @@ Notes on image optimization:
 - `author_name` - Commenter's name
 - `content` - Comment text
 - `created_at` - Timestamp
+
+## Authentication (Supabase-backed, Required for Create/Upload)
+
+Email/password auth is powered by Supabase Auth. Users must be signed in to create albums or upload photos. Viewing albums and photos remains public (link-based access). Participation history is tracked automatically.
+
+Pages:
+| Path | Purpose |
+|------|---------|
+| `/auth/register` | Create an account (username + email + password) |
+| `/auth/login` | Sign in with email + password |
+| `/my` | Lists albums you have interacted with |
+
+Automatic participation tracking occurs on:
+1. Opening an album page
+2. Fetching photos for an album
+3. Viewing or posting comments
+4. Uploading a photo
+
+Schema additions (run once in Supabase SQL Editor): `profiles`, `album_participation` plus RLS policies (idempotent). See `supabase-schema.sql`.
+
+Environment variables (client):
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+```
+
+Redirect flow: unauthenticated users are prompted to sign in/register and then redirected back (`?next=/album/xyz`).
+
+### Applying schema changes in Supabase
+
+Whenever this repo changes the database schema (for example, new columns in `profiles`), do the following in Supabase:
+
+1) Open the Supabase Dashboard → your project → SQL Editor.
+2) Open `supabase-schema.sql` from this repo and paste it into the SQL editor.
+3) Run it as-is. The script is idempotent: it uses `IF NOT EXISTS`/`DO $$` guards so re-running is safe.
+
+Storage setup (one-time):
+- Create a public bucket named `uploads` for photos.
+- Create a public bucket named `avatars` for profile images.
+   - The SQL script also adds RLS policies that allow public read and authenticated write to `avatars`.
+
+Environment variables (client-side):
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+Verify after running:
+- In Table Editor → `profiles`, you should see columns: `username`, `display_name`, `avatar_url`, and social links `instagram_url`, `twitter_url`.
+- In Storage → `uploads` and `avatars` buckets should exist and be Public.
+
+Optional: Supabase CLI
+- If you prefer CLI-based migrations, you can maintain SQL in `supabase/migrations` and use `supabase db push`. For this project, the single `supabase-schema.sql` script is the source of truth and can be re-run safely.
+
+Most recent change (what to do now):
+- Added social link fields to `profiles`: `instagram_url` and `twitter_url`.
+- Action: Re-run `supabase-schema.sql` in the SQL Editor to add these columns. No additional storage/bucket changes required.
 
 ## API Endpoints (Supabase-backed)
 
