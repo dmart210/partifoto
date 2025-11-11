@@ -44,6 +44,8 @@ export async function POST(
     // Try to resolve author from authenticated user if a Bearer token is present
     const authz = request.headers.get('authorization') || request.headers.get('Authorization');
     let resolvedAuthor: string | null = null;
+    let userId: string | null = null;
+    
     if (authz && authz.toLowerCase().startsWith('bearer ')) {
       const token = authz.split(' ')[1];
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -52,6 +54,7 @@ export async function POST(
         const authed = createClient(supabaseUrl, supabaseAnonKey, { global: { headers: { Authorization: `Bearer ${token}` } } });
         const { data: { user } } = await authed.auth.getUser();
         if (user) {
+          userId = user.id; // Store user ID for linking to profile
           const { data: prof } = await authed
             .from('profiles')
             .select('display_name, username')
@@ -59,7 +62,7 @@ export async function POST(
             .single();
           resolvedAuthor = limitAndSanitizeName(prof?.display_name) || limitAndSanitizeName(prof?.username) || null;
         }
-      } catch {
+      } catch (err) {
         // fall back to client-provided author below
       }
     }
@@ -77,7 +80,7 @@ export async function POST(
 
     const { data: inserted, error } = await supabase
       .from('comments')
-      .insert({ id, photo_id: photoId, author_name: resolvedAuthor, content, created_at })
+      .insert({ id, photo_id: photoId, author_name: resolvedAuthor, user_id: userId, content, created_at })
       .select()
       .single();
 
@@ -120,7 +123,26 @@ export async function GET(
       return NextResponse.json({ error: 'Failed to fetch comments' }, { status: 500 });
     }
 
-    const res = NextResponse.json(data || []);
+    // Enrich comments with usernames for profile linking
+    const enrichedComments = await Promise.all(
+      (data || []).map(async (comment: any) => {
+        if (comment.user_id) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('username')
+            .eq('id', comment.user_id)
+            .maybeSingle();
+          
+          return {
+            ...comment,
+            username: profile?.username || null
+          };
+        }
+        return { ...comment, username: null };
+      })
+    );
+
+    const res = NextResponse.json(enrichedComments);
     hardenHeaders(res.headers);
     return res;
   } catch (error) {

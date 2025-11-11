@@ -53,3 +53,13 @@ body {
 .accent {
   background-image: linear-gradient(90deg, var(--accent), var(--accent-2));
 }
+
+/* Hamburger menu slide-in animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

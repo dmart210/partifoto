@@ -61,11 +61,23 @@ export async function POST(
     }
 
   const file = (formData.get('file') || formData.get('photo')) as File | null;
-  const uploadedBy = limitAndSanitizeName(formData.get('uploadedBy'));
   const title = limitAndSanitizeTitle(formData.get('title'));
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided', hint: 'Expected form field named "file" or "photo"' }, { status: 400 });
+    }
+
+    // Fetch the user's username from their profile
+    let uploadedBy: string | null = null;
+    try {
+      const { data: prof } = await authed
+        .from('profiles')
+        .select('username')
+        .eq('id', user.id)
+        .single();
+      uploadedBy = prof?.username || null;
+    } catch (e) {
+      // If profile lookup fails, continue without username
     }
 
     if ((file as any).size > MAX_FILE_SIZE_BYTES) {
@@ -106,6 +118,7 @@ export async function POST(
         filename: storagePath,
         original_name: originalName,
         uploaded_by: uploadedBy,
+        user_id: user.id, // Store user ID for secure RLS
         title,
         created_at
       })

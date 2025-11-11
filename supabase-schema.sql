@@ -19,11 +19,12 @@ CREATE TABLE IF NOT EXISTS photos (
   created_at BIGINT NOT NULL
 );
 
--- Create comments tablec
+-- Create comments table
 CREATE TABLE IF NOT EXISTS comments (
   id TEXT PRIMARY KEY,
   photo_id TEXT NOT NULL REFERENCES photos(id) ON DELETE CASCADE,
   author_name TEXT NOT NULL,
+  user_id TEXT, -- UUID of authenticated user, NULL for anonymous comments
   content TEXT NOT NULL,
   created_at BIGINT NOT NULL
 );

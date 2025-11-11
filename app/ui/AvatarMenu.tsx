@@ -113,15 +113,16 @@ export default function AvatarMenu() {
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/50 z-40"
+            className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ease-out"
             onClick={() => setOpen(false)}
             aria-hidden="true"
           />
           {/* Slide-out drawer */}
           <aside
-            className="fixed top-0 left-0 h-full w-80 max-w-[85vw] glass-strong border-r border-subtle shadow-2xl z-50 transform transition-transform duration-200 ease-out translate-x-0"
+            className="fixed top-0 left-0 h-full w-80 max-w-[85vw] glass-strong border-r border-subtle shadow-2xl z-50 transform transition-transform duration-300 ease-out translate-x-0"
             role="dialog"
             aria-label="Account Menu"
+            style={{ animation: 'slideIn 0.3s ease-out' }}
           >
             <div className="p-4 border-b border-subtle flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border border-subtle bg-white/5">

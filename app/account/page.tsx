@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { optimizeImage } from '@/lib/imageOpt';
 import { useRouter } from 'next/navigation';
@@ -27,6 +28,7 @@ export default function AccountPage() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  
   const router = useRouter();
 
   useEffect(() => {
@@ -186,38 +188,38 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 max-w-3xl mx-auto">
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-3xl font-extrabold">Account Settings</h1>
-        <button onClick={() => router.push('/')} className="glass px-4 py-2 rounded-xl border border-subtle text-sm">Home</button>
+    <div className="min-h-screen p-4 md:p-8 max-w-3xl mx-auto">
+      <div className="mb-6 md:mb-8 flex items-center justify-between">
+        <h1 className="text-2xl md:text-3xl font-extrabold">Account Settings</h1>
+        <button onClick={() => router.push('/')} className="glass px-3 md:px-4 py-2 rounded-xl border border-subtle text-xs md:text-sm">Home</button>
       </div>
 
-      <div className="glass-strong rounded-2xl p-8 border border-subtle shadow-xl space-y-8">
-        <section className="flex flex-col md:flex-row gap-8">
+      <div className="glass-strong rounded-2xl p-4 md:p-8 border border-subtle shadow-xl space-y-6 md:space-y-8">
+        <section className="flex flex-col md:flex-row gap-6 md:gap-8">
           <div className="flex flex-col items-center gap-4 w-full md:w-56">
-            <div className="relative w-40 h-40 rounded-full overflow-hidden bg-white/5 flex items-center justify-center border border-subtle">
+            <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden bg-white/5 flex items-center justify-center border border-subtle">
               {avatarUrl ? (
                 <Image src={avatarUrl} alt="Avatar" fill className="object-cover" />
               ) : (
-                <span className="text-5xl">👤</span>
+                <span className="text-4xl md:text-5xl">👤</span>
               )}
             </div>
             <label className="w-full">
-              <div className="w-full text-center accent hover:brightness-110 text-white font-bold py-2 px-4 rounded-xl text-sm cursor-pointer">
+              <div className="w-full text-center accent hover:brightness-110 text-white font-bold py-2 px-4 rounded-xl text-xs md:text-sm cursor-pointer">
                 {uploading ? 'Uploading…' : 'Change Avatar'}
               </div>
               <input type="file" accept="image/*" onChange={onAvatarChange} className="hidden" disabled={uploading} />
             </label>
           </div>
 
-          <div className="flex-1 space-y-6">
+          <div className="flex-1 space-y-4 md:space-y-6">
             <div>
               <label className="block text-sm font-bold mb-2">Username</label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-purple-600 focus:border-purple-600 outline-none text-white placeholder:text-muted"
+                className="w-full px-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-purple-600 focus:border-purple-600 outline-none text-white placeholder:text-muted text-base"
               />
             </div>
             <div>
@@ -227,10 +229,10 @@ export default function AccountPage() {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="Name to show on albums"
-                className="w-full px-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-purple-600 focus:border-purple-600 outline-none text-white placeholder:text-muted"
+                className="w-full px-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-purple-600 focus:border-purple-600 outline-none text-white placeholder:text-muted text-base"
               />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               <div>
                 <label className="text-sm font-bold mb-2 flex items-center gap-2">Instagram
                   <span className="inline-block w-4 h-4">{/* Instagram icon */}
@@ -247,7 +249,7 @@ export default function AccountPage() {
                     value={instagram}
                     onChange={(e) => setInstagram(e.target.value.replace(/^@+/, ''))}
                     placeholder="yourhandle"
-                    className="w-full pl-10 pr-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none text-white placeholder:text-muted"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none text-white placeholder:text-muted text-base"
                   />
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-pink-400">@</span>
                 </div>
@@ -281,7 +283,7 @@ export default function AccountPage() {
                     value={twitter}
                     onChange={(e) => setTwitter(e.target.value.replace(/^@+/, ''))}
                     placeholder="yourhandle"
-                    className="w-full pl-10 pr-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none text-white placeholder:text-muted"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none text-white placeholder:text-muted text-base"
                   />
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sky-400">@</span>
                 </div>
@@ -292,12 +294,31 @@ export default function AccountPage() {
               <button
                 onClick={saveProfile}
                 disabled={saving || uploading}
-                className="accent hover:brightness-110 disabled:brightness-75 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+                className="accent hover:brightness-110 disabled:brightness-75 text-white font-bold py-3 px-4 md:px-6 rounded-xl transition-all shadow-lg hover:shadow-xl disabled:cursor-not-allowed text-sm md:text-base"
               >
                 {saving ? 'Saving…' : 'Save Changes'}
               </button>
             </div>
-            {error && <div className="text-red-400 text-sm">{error}</div>}
+            {error && <div className="text-red-400 text-xs md:text-sm">{error}</div>}
+          </div>
+        </section>
+
+        {/* Security Section */}
+        <section className="pt-6 md:pt-8 border-t border-subtle">
+          <h2 className="text-xl md:text-2xl font-bold mb-4">Security</h2>
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 p-4 border border-subtle rounded-xl hover:border-purple-500/50 transition-colors">
+              <div>
+                <h3 className="font-bold mb-1 text-sm md:text-base">Password</h3>
+                <p className="text-xs md:text-sm text-muted">Change your password to keep your account secure</p>
+              </div>
+              <Link
+                href="/account/change-password"
+                className="accent hover:brightness-110 text-white font-bold py-2 px-4 md:px-5 rounded-xl transition-all shadow-lg hover:shadow-xl text-xs md:text-sm text-center"
+              >
+                Change Password
+              </Link>
+            </div>
           </div>
         </section>
 

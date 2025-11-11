@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useParams, usePathname } from 'next/navigation';
+import Link from 'next/link';
 import Image from 'next/image';
 import type { Album, Photo, Comment } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
@@ -52,7 +53,8 @@ export default function AlbumPage() {
         .select('display_name, username')
         .eq('id', user.id)
         .single();
-      const resolved = prof?.display_name || prof?.username || (user.email ? user.email.split('@')[0] : '');
+      // Use username for consistency with photo uploads
+      const resolved = prof?.username || prof?.display_name || (user.email ? user.email.split('@')[0] : '');
       if (resolved) {
         setProfileLoadedName(resolved);
         setUserName(resolved); // populate for legacy state usage
@@ -170,6 +172,48 @@ export default function AlbumPage() {
     link.href = href;
     link.download = photo.original_name;
     link.click();
+  };
+
+  const handleDeletePhoto = async (photo: Photo) => {
+    if (!confirm('Are you sure you want to delete this photo? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alert('You must be signed in to delete photos');
+        return;
+      }
+
+      const response = await fetch(`/api/photos/${photo.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      });
+
+      if (response.ok) {
+        // Close the lightbox
+        setSelectedPhoto(null);
+        // Refresh the photos list with a small delay to ensure DB has updated
+        setTimeout(() => {
+          fetchPhotos();
+        }, 300);
+        alert('Photo deleted successfully');
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Failed to delete photo');
+      }
+    } catch (error) {
+      console.error('Error deleting photo:', error);
+      alert('An error occurred while deleting the photo');
+    }
+  };
+
+  const canDeletePhoto = (photo: Photo): boolean => {
+    // Check if the current user uploaded this photo (compares usernames)
+    return isAuthed && !!profileLoadedName && photo.uploaded_by === profileLoadedName;
   };
 
   const copyShareLink = () => {
@@ -383,12 +427,22 @@ export default function AlbumPage() {
               >
                 ×
               </button>
-              <button
-                onClick={() => handleDownload(selectedPhoto)}
-                className="absolute bottom-4 right-4 glass rounded-lg px-4 py-2 font-semibold border border-subtle"
-              >
-                ⬇️ Download
-              </button>
+              <div className="absolute bottom-4 right-4 flex gap-2">
+                {canDeletePhoto(selectedPhoto) && (
+                  <button
+                    onClick={() => handleDeletePhoto(selectedPhoto)}
+                    className="glass rounded-lg px-4 py-2 font-semibold border border-red-500/50 text-red-400 hover:bg-red-500/10 transition-all"
+                  >
+                    🗑️ Delete
+                  </button>
+                )}
+                <button
+                  onClick={() => handleDownload(selectedPhoto)}
+                  className="glass rounded-lg px-4 py-2 font-semibold border border-subtle hover:bg-white/5 transition-all"
+                >
+                  ⬇️ Download
+                </button>
+              </div>
             </div>
 
             {/* Comments Section */}
@@ -421,7 +475,16 @@ export default function AlbumPage() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="font-bold text-sm truncate">{comment.author_name}</span>
+                            {comment.username ? (
+                              <Link 
+                                href={`/user/${comment.username}`}
+                                className="font-bold text-sm truncate hover:text-violet-300 transition-colors hover:underline"
+                              >
+                                {comment.author_name}
+                              </Link>
+                            ) : (
+                              <span className="font-bold text-sm truncate">{comment.author_name}</span>
+                            )}
                             <span className="text-xs text-muted">
                               {new Date(comment.created_at).toLocaleDateString()}
                             </span>
