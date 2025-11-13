@@ -120,8 +120,6 @@ export default function HomePage() {
           .order('created_at', { ascending: false })
           .limit(20);
         
-        console.log('Photos by user_id:', photosByUserId?.length || 0);
-        
         if (photosByUserId && photosByUserId.length > 0) {
           myPhotos = photosByUserId;
         } else {
@@ -135,12 +133,9 @@ export default function HomePage() {
               .order('created_at', { ascending: false })
               .limit(20);
             
-            console.log('Photos by username:', photosByUsername?.length || 0);
             myPhotos = photosByUsername;
           }
         }
-        
-        console.log('Final photos found:', myPhotos?.length || 0);
         
         if (myPhotos && myPhotos.length > 0) {
             // Get album names for the photos
