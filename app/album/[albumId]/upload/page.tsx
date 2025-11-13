@@ -19,12 +19,31 @@ export default function AlbumUploadPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadName, setUploadName] = useState('');
   const [photoTitle, setPhotoTitle] = useState('');
+  const [username, setUsername] = useState<string>('');
+  const [displayName, setDisplayName] = useState<string>('');
+  const [nameChoice, setNameChoice] = useState<'username' | 'display_name' | 'custom'>('username');
 
   useEffect(() => {
     const init = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         setIsAuthed(!!user);
+        
+        // Fetch user profile if authenticated
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('username, display_name')
+            .eq('id', user.id)
+            .single();
+          
+          if (profile) {
+            setUsername(profile.username || '');
+            setDisplayName(profile.display_name || '');
+            // Default to username
+            setUploadName(profile.username || '');
+          }
+        }
       } catch (e) {
         // console.warn('Auth check failed', e); // debug disabled for deployment
       } finally {
@@ -53,11 +72,23 @@ export default function AlbumUploadPage() {
 
   const reset = () => {
     setSelectedFile(null);
-    setUploadName('');
+    setUploadName(username); // Reset to username
+    setNameChoice('username');
     setPhotoTitle('');
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
+    }
+  };
+
+  const handleNameChoiceChange = (choice: 'username' | 'display_name' | 'custom') => {
+    setNameChoice(choice);
+    if (choice === 'username') {
+      setUploadName(username);
+    } else if (choice === 'display_name') {
+      setUploadName(displayName);
+    } else {
+      setUploadName(''); // Clear for custom input
     }
   };
 
@@ -152,14 +183,27 @@ export default function AlbumUploadPage() {
               )}
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-bold mb-2">Your Name <span className="text-gray-400 font-normal">(Optional)</span></label>
-                  <input
-                    type="text"
-                    value={uploadName}
-                    onChange={(e) => setUploadName(e.target.value)}
-                    placeholder="e.g. Alex"
-                    className="w-full px-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-purple-600 focus:border-purple-600 outline-none text-white placeholder:text-muted"
-                  />
+                  <label className="block text-sm font-bold mb-2">Display As</label>
+                  <div className="space-y-3">
+                    <select
+                      value={nameChoice}
+                      onChange={(e) => handleNameChoiceChange(e.target.value as 'username' | 'display_name' | 'custom')}
+                      className="w-full px-4 py-3 border-2 border-subtle bg-[#1a1a1f] rounded-xl focus:ring-2 focus:ring-purple-600 focus:border-purple-600 outline-none text-white text-base"
+                    >
+                      {username && <option value="username">Username ({username})</option>}
+                      {displayName && <option value="display_name">Display Name ({displayName})</option>}
+                      <option value="custom">Custom Name</option>
+                    </select>
+                    {nameChoice === 'custom' && (
+                      <input
+                        type="text"
+                        value={uploadName}
+                        onChange={(e) => setUploadName(e.target.value)}
+                        placeholder="Enter custom name"
+                        className="w-full px-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-purple-600 focus:border-purple-600 outline-none text-white placeholder:text-muted text-base"
+                      />
+                    )}
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-bold mb-2">Photo Title / Caption <span className="text-gray-400 font-normal">(Optional)</span></label>
@@ -168,7 +212,7 @@ export default function AlbumUploadPage() {
                     value={photoTitle}
                     onChange={(e) => setPhotoTitle(e.target.value)}
                     placeholder="e.g. Opening toast!"
-                    className="w-full px-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-purple-600 focus:border-purple-600 outline-none text-white placeholder:text-muted"
+                    className="w-full px-4 py-3 border-2 border-subtle bg-transparent rounded-xl focus:ring-2 focus:ring-purple-600 focus:border-purple-600 outline-none text-white placeholder:text-muted text-base"
                   />
                 </div>
               </div>

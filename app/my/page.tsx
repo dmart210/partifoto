@@ -18,7 +18,7 @@ export default function MyPage() {
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.replace('/auth/login');
+        router.replace('/login');
         return;
       }
 
@@ -55,7 +55,10 @@ export default function MyPage() {
     <div className="min-h-screen p-8">
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-extrabold">My Albums</h1>
+          <div className="flex items-center gap-4">
+            <button onClick={() => router.back()} className="glass px-4 py-2 rounded-xl border border-subtle hover:shadow-lg transition-shadow">← Back</button>
+            <h1 className="text-3xl font-extrabold">My Albums</h1>
+          </div>
           <button onClick={logout} className="glass px-4 py-2 rounded-xl border border-subtle">Sign out</button>
         </div>
         {profile && (

@@ -1,4 +1,4 @@
-# User Profile Feature
+![alt text](image.png)# User Profile Feature
 
 ## Overview
 Users can now view public profiles by clicking on comment author names. Profiles display:

@@ -12,65 +12,18 @@ export default function LandingPage() {
             <span className="text-6xl md:text-7xl">📸</span>
           </div>
           <h1 className="text-5xl md:text-7xl font-extrabold mb-4 md:mb-6 tracking-tight bg-clip-text text-transparent bg-linear-to-r from-violet-400 via-fuchsia-400 to-pink-400">
-            Never Lose a Party Photo Again
+            Share Memories Together
           </h1>
-          <p className="text-xl md:text-2xl text-muted font-medium px-4 mb-4">
-            One link. Everyone's photos. All in one place.
-          </p>
-          <p className="text-base md:text-lg text-muted/80 px-4 mb-8 md:mb-12 max-w-3xl mx-auto">
-            Met someone at a party and took photos together? Don't exchange numbers—just drop your photos in the shared album and everyone gets them.
+          <p className="text-xl md:text-3xl text-muted font-medium px-4 mb-8 md:mb-12">
+            The easiest way to collect and share event photos
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/login" className="accent hover:brightness-110 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-violet-700/40 hover:shadow-xl transform hover:-translate-y-0.5">
+            <Link href="/" className="accent hover:brightness-110 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-violet-700/40 hover:shadow-xl transform hover:-translate-y-0.5">
               Get Started Free
             </Link>
             <a href="#how-it-works" className="glass px-8 py-4 rounded-xl border border-subtle hover:border-violet-500/50 transition-all font-semibold">
-              See How It Works
+              Learn More
             </a>
-          </div>
-        </div>
-
-        {/* Problem/Solution Callout */}
-        <div className="mb-20 md:mb-32">
-          <div className="glass-strong rounded-2xl p-8 md:p-12 border border-subtle shadow-2xl">
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-              <div>
-                <div className="text-4xl mb-4">😕</div>
-                <h3 className="text-2xl md:text-3xl font-bold mb-4 text-red-400">The Problem</h3>
-                <ul className="space-y-3 text-base md:text-lg text-muted">
-                  <li className="flex items-start gap-3">
-                    <span className="text-red-400 mt-1">✗</span>
-                    <span>You meet people at a party and take amazing photos together</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-red-400 mt-1">✗</span>
-                    <span>You're not connected on social media or don't exchange numbers</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-red-400 mt-1">✗</span>
-                    <span>The photos get stuck on one person's phone forever</span>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <div className="text-4xl mb-4">✨</div>
-                <h3 className="text-2xl md:text-3xl font-bold mb-4 text-violet-400">The Solution</h3>
-                <ul className="space-y-3 text-base md:text-lg text-muted">
-                  <li className="flex items-start gap-3">
-                    <span className="text-violet-400 mt-1">✓</span>
-                    <span>Host creates one album for the entire event</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-violet-400 mt-1">✓</span>
-                    <span>Everyone gets the same link—no contact info needed</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-violet-400 mt-1">✓</span>
-                    <span>All photos land in one place that everyone can access anytime</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -80,7 +33,7 @@ export default function LandingPage() {
             <h2 className="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-linear-to-r from-violet-400 to-fuchsia-400">
               How It Works
             </h2>
-            <p className="text-muted text-base md:text-lg">Dead simple. Three steps.</p>
+            <p className="text-muted text-base md:text-lg">Three simple steps to start sharing memories</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-12 md:gap-8 mb-20">
@@ -93,7 +46,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-2xl md:text-3xl font-bold mb-4">Create Album</h3>
               <p className="text-base md:text-lg text-muted leading-relaxed px-4">
-                Host creates one album for the party or event in seconds
+                Create a new album in seconds and get a unique shareable link
               </p>
             </div>
 
@@ -104,9 +57,9 @@ export default function LandingPage() {
                 </div>
                 <div className="absolute -top-1 -right-1 text-4xl md:text-5xl">🔗</div>
               </div>
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">Share One Link</h3>
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">Share Link</h3>
               <p className="text-base md:text-lg text-muted leading-relaxed px-4">
-                Post it in the group chat, send it around—everyone gets the same link
+                Share the link with friends and family so they can contribute
               </p>
             </div>
 
@@ -117,9 +70,9 @@ export default function LandingPage() {
                 </div>
                 <div className="absolute -top-1 -right-1 text-4xl md:text-5xl">🎉</div>
               </div>
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">Dump All Photos</h3>
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">Enjoy Together</h3>
               <p className="text-base md:text-lg text-muted leading-relaxed px-4">
-                Everyone uploads their photos to one spot. No more chasing people down!
+                Everyone can upload, comment, and download photos from the album
               </p>
             </div>
           </div>
@@ -128,32 +81,31 @@ export default function LandingPage() {
         {/* Features Section */}
         <div className="mt-20 md:mt-32">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-4">Your One-Stop Photo Shop</h2>
-            <p className="text-muted text-base md:text-lg">Everything you need for party photo sharing</p>
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-4">Everything You Need</h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="glass rounded-xl p-8 shadow-lg hover:shadow-xl hover:shadow-violet-500/20 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 border border-subtle group">
-              <div className="text-5xl mb-6 group-hover:scale-110 transition-transform">📎</div>
-              <h3 className="font-bold mb-4 text-2xl group-hover:text-violet-300 transition-colors">No Contact Info Needed</h3>
+              <div className="text-5xl mb-6 group-hover:scale-110 transition-transform">📸</div>
+              <h3 className="font-bold mb-4 text-2xl group-hover:text-violet-300 transition-colors">Upload Photos</h3>
               <p className="text-base leading-relaxed text-muted">
-                Just share the link. No phone numbers, no social media follows—everyone gets access instantly.
+                Anyone with the link can add photos to the album instantly.
               </p>
             </div>
 
             <div className="glass rounded-xl p-8 shadow-lg hover:shadow-xl hover:shadow-fuchsia-500/20 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 border border-subtle group">
-              <div className="text-5xl mb-6 group-hover:scale-110 transition-transform">📦</div>
-              <h3 className="font-bold mb-4 text-2xl group-hover:text-fuchsia-300 transition-colors">All Photos, One Place</h3>
+              <div className="text-5xl mb-6 group-hover:scale-110 transition-transform">💬</div>
+              <h3 className="font-bold mb-4 text-2xl group-hover:text-fuchsia-300 transition-colors">Comment &amp; Share</h3>
               <p className="text-base leading-relaxed text-muted">
-                Everyone dumps their photos in the same album. No more scattered group chats or lost memories.
+                Leave comments on photos and share memories together. Engage with your event community.
               </p>
             </div>
 
             <div className="glass rounded-xl p-8 shadow-lg hover:shadow-xl hover:shadow-pink-500/20 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 border border-subtle group">
               <div className="text-5xl mb-6 group-hover:scale-110 transition-transform">⬇️</div>
-              <h3 className="font-bold mb-4 text-2xl group-hover:text-pink-300 transition-colors">Everyone Gets Everything</h3>
+              <h3 className="font-bold mb-4 text-2xl group-hover:text-pink-300 transition-colors">Download</h3>
               <p className="text-base leading-relaxed text-muted">
-                See and download all photos from the event. You're in every group photo now!
+                Download any photo from the album in full quality. Keep your memories forever.
               </p>
             </div>
           </div>
@@ -161,12 +113,12 @@ export default function LandingPage() {
 
         {/* CTA Section */}
         <div className="mt-20 md:mt-32 mb-20 text-center glass-strong rounded-3xl p-12 md:p-16 border border-subtle">
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-4 md:mb-6">Stop Losing Party Photos</h2>
+          <h2 className="text-3xl md:text-5xl font-extrabold mb-4 md:mb-6">Ready to Get Started?</h2>
           <p className="text-lg md:text-xl text-muted mb-8 md:mb-10 px-4">
-            Create your album, share the link, and let everyone dump their photos in one place.
+            Create your first album in seconds. No credit card required.
           </p>
-          <Link href="/login" className="inline-block accent hover:brightness-110 text-white font-bold py-5 px-10 rounded-xl transition-all duration-300 shadow-lg hover:shadow-violet-700/40 hover:shadow-xl transform hover:-translate-y-0.5 text-lg">
-            Create Free Album
+          <Link href="/" className="inline-block accent hover:brightness-110 text-white font-bold py-5 px-10 rounded-xl transition-all duration-300 shadow-lg hover:shadow-violet-700/40 hover:shadow-xl transform hover:-translate-y-0.5 text-lg">
+            Create Album Now
           </Link>
         </div>
 
@@ -193,7 +145,7 @@ export default function LandingPage() {
               <h4 className="font-bold mb-4 text-sm">Product</h4>
               <ul className="space-y-2 text-sm text-muted">
                 <li><a href="#how-it-works" className="hover:text-violet-300 transition-colors">How it works</a></li>
-                <li><Link href="/login" className="hover:text-violet-300 transition-colors">Get Started</Link></li>
+                <li><Link href="/" className="hover:text-violet-300 transition-colors">Get Started</Link></li>
               </ul>
             </div>
 

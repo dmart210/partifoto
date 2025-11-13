@@ -69,10 +69,10 @@ export default function CreateAlbum() {
       <div className="max-w-2xl mx-auto">
         <div className="mb-8">
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.back()}
             className="font-semibold flex items-center gap-2 transition-colors text-muted hover:text-white"
           >
-            <span>←</span> Back to Home
+            <span>←</span> Back
           </button>
         </div>
         {!authChecked ? (
@@ -85,7 +85,7 @@ export default function CreateAlbum() {
             <h1 className="text-3xl font-extrabold">Sign in required</h1>
             <p className="text-muted">You need an account to create a new album.</p>
             <div className="flex items-center justify-center gap-4 flex-wrap">
-              <a href="/auth/login" className="accent px-6 py-3 rounded-xl font-semibold">Sign In</a>
+              <a href="/login" className="accent px-6 py-3 rounded-xl font-semibold">Sign In</a>
               <a href="/auth/register" className="glass px-6 py-3 rounded-xl font-semibold border border-subtle">Create Account</a>
             </div>
           </div>

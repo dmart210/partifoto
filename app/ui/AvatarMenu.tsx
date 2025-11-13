@@ -80,21 +80,21 @@ export default function AvatarMenu() {
     router.replace('/');
   };
 
-  const size = 44;
+  const size = 56;
 
   return (
     <div className="relative inline-flex items-center gap-2" ref={ref}>
       <button
         aria-label="Account"
         onClick={() => setOpen(v => !v)}
-        className="rounded-full overflow-hidden border border-subtle shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white/5 ring-1 ring-white/10"
+        className="rounded-full overflow-hidden border-2 border-subtle shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-purple-600 bg-white/5 ring-1 ring-white/10 transition-all hover:scale-105"
         style={{ width: size, height: size }}
         title={displayName || 'Account'}
       >
         {avatarUrl ? (
           <Image src={avatarUrl} alt="Avatar" width={size} height={size} className="object-cover" />
         ) : (
-          <div className="w-full h-full grid place-items-center text-lg">👤</div>
+          <div className="w-full h-full grid place-items-center text-2xl">👤</div>
         )}
       </button>
 
@@ -102,7 +102,7 @@ export default function AvatarMenu() {
         <button
           type="button"
           onClick={() => setOpen(v => !v)}
-          className="text-xs text-white/80 hover:text-white px-2 py-1 rounded-lg bg-white/5 border border-subtle hidden sm:block"
+          className="text-sm text-white/80 hover:text-white px-3 py-1.5 rounded-lg bg-white/5 border border-subtle hidden sm:block hover:bg-white/10 transition-all"
           title={`@${username}`}
         >
           @{username}
